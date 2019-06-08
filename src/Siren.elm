@@ -1,8 +1,8 @@
 module Siren exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, input, label, p, text)
-import Html.Attributes exposing (autofocus, class, for, id, placeholder, value)
+import Html exposing (Html, button, div, input, label, p, text, a)
+import Html.Attributes exposing (autofocus, class, for, id, placeholder, value, href, target)
 import Html.Events exposing (onClick, onInput)
 
 
@@ -139,39 +139,48 @@ hint state =
 view : Model -> Html Action
 view model =
     div
-        [ class "container" ]
+        [ class "wrapper" ]
         [ div
-            [ class "input-field" ]
-            [ input
-                [ autofocus True
-                , placeholder "Exemple : 732829320"
-                , onInput SirenUpdated
-                , value model.sirenNumber
-                , id "siren"
-                , class "input"
+            [ class "container" ]
+            [ div
+                [ class "input-field" ]
+                [ input
+                    [ autofocus True
+                    , placeholder "Exemple : 732829320"
+                    , onInput SirenUpdated
+                    , value model.sirenNumber
+                    , id "siren"
+                    , class "input"
+                    ]
+                    []
+                , label
+                    [ for "siren"
+                    , class "input-label"
+                    ]
+                    [ text "Valider mon SIREN "
+                    ]
                 ]
-                []
-            , label
-                [ for "siren"
-                , class "input-label"
+            , div
+                [ class "buttons-wrapper" ]
+                [ button
+                    [ onClick ResetSirenNumber
+                    , class "button"
+                    ]
+                    [ text "réinitialiser" ]
+                , button
+                    [ class "button"
+                    , onClick SetSirenNumber
+                    ]
+                    [ text "exemple" ]
                 ]
-                [ text "Valider mon SIREN "
-                ]
+            , hint model.state
             ]
-        , div
-            [ class "buttons-wrapper" ]
-            [ button
-                [ onClick ResetSirenNumber
-                , class "button"
-                ]
-                [ text "réinitialiser" ]
-            , button
-                [ class "button"
-                , onClick SetSirenNumber
-                ]
-                [ text "exemple" ]
+        , a
+            [ class "button"
+            , target "blank"
+            , href "https://github.com/aminnairi/siren/"
             ]
-        , hint model.state
+            [ text "github" ]
         ]
 
 
