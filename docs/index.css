@@ -12,10 +12,6 @@ html, body {
 
 .wrapper {
     min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
 }
 
 .container {
@@ -77,6 +73,8 @@ html, body {
     border: none;
     box-shadow: 1px 1px 3px grey, -1px 1px 3px grey;
     outline: none;
+    font-size: 0.75rem;
+    text-align: center;
 }
 
 .button:first-child {
@@ -87,4 +85,14 @@ a.button {
     display: inline-block;
     text-decoration: none;
     margin-bottom: 20px;
+}
+
+footer {
+    position: absolute;
+    bottom: 10px;
+    width: 100%;
+    left: 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
