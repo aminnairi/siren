@@ -1,4 +1,4 @@
-.PHONY: start stop restart shell reactor build
+.PHONY: start stop restart shell reactor build format
 
 start:
 	docker-compose up -d node
@@ -16,3 +16,6 @@ reactor: start
 
 build: start
 	docker-compose exec node npm run build
+
+format: start
+	docker-compose exec node npm run format
