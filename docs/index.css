@@ -10,6 +10,14 @@ html, body {
     background-color: ghostwhite;
 }
 
+.wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .container {
     margin: 0 auto;
     max-width: 800px;
@@ -53,10 +61,10 @@ html, body {
 }
 
 .button {
+    cursor: pointer;
     font-weight: bolder;
     display: block;
     min-width: 64px;
-    height: 36px;
     padding-left: 16px;
     padding-right: 16px;
     padding-top: 9px;
@@ -72,4 +80,10 @@ html, body {
 
 .button:first-child {
     margin-right: 10px;
+}
+
+a.button {
+    display: inline-block;
+    text-decoration: none;
+    margin-bottom: 20px;
 }
