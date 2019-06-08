@@ -1,7 +1,7 @@
 module Siren exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, input, label, p, text, a)
+import Html exposing (Html, button, div, input, label, p, text, a, main_, footer)
 import Html.Attributes exposing (autofocus, class, for, id, placeholder, value, href, target)
 import Html.Events exposing (onClick, onInput)
 
@@ -140,7 +140,7 @@ view : Model -> Html Action
 view model =
     div
         [ class "wrapper" ]
-        [ div
+        [ main_
             [ class "container" ]
             [ div
                 [ class "input-field" ]
@@ -175,12 +175,15 @@ view model =
                 ]
             , hint model.state
             ]
-        , a
-            [ class "button"
-            , target "blank"
-            , href "https://github.com/aminnairi/siren/"
+        , footer
+            []
+            [ a
+                [ class "button"
+                , target "blank"
+                , href "https://github.com/aminnairi/siren/"
+                ]
+                [ text "github" ]
             ]
-            [ text "github" ]
         ]
 
 
