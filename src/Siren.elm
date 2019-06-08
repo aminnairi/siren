@@ -160,8 +160,16 @@ view model =
             ]
         , div
             [ class "buttons-wrapper" ]
-            [ button [ onClick ResetSirenNumber, class "button" ] [ text "réinitialiser" ]
-            , button [ class "button", onClick SetSirenNumber ] [ text "exemple" ]
+            [ button
+                [ onClick ResetSirenNumber
+                , class "button"
+                ]
+                [ text "réinitialiser" ]
+            , button
+                [ class "button"
+                , onClick SetSirenNumber
+                ]
+                [ text "exemple" ]
             ]
         , hint model.state
         ]
