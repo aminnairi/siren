@@ -1,9 +1,10 @@
 module Siren exposing (main)
 
 import Browser
-import Html exposing (Html, div, text, input, label, p, button)
-import Html.Attributes exposing (autofocus, placeholder, value, id, for, class)
-import Html.Events exposing (onInput, onClick)
+import Html exposing (Html, button, div, input, label, p, text)
+import Html.Attributes exposing (autofocus, class, for, id, placeholder, value)
+import Html.Events exposing (onClick, onInput)
+
 
 type State
     = Initial
@@ -12,19 +13,23 @@ type State
     | Valid
     | BadCharacters
 
+
 type alias Model =
     { sirenNumber : String
     , state : State
     }
+
 
 type Action
     = SirenUpdated String
     | ResetSirenNumber
     | SetSirenNumber
 
+
 initialModel : Model
 initialModel =
     Model "" Initial
+
 
 characterToInteger : String -> Int
 characterToInteger character =
@@ -35,19 +40,24 @@ characterToInteger character =
         Nothing ->
             0
 
+
 multiplyDigitAtOddIndex : Int -> Int -> Int
 multiplyDigitAtOddIndex index digit =
     if modBy 2 index /= 0 then
         digit * 2
+
     else
         digit
+
 
 addDigits : Int -> Int
 addDigits digits =
     if digits > 9 then
         digits - 9
+
     else
         digits
+
 
 checkSum : Int -> State
 checkSum sum =
@@ -57,9 +67,11 @@ checkSum sum =
     else
         Invalid
 
+
 splitEachCharacters : String -> List String
 splitEachCharacters string =
     String.split "" string
+
 
 validateSirenNumber : String -> State
 validateSirenNumber sirenNumber =
@@ -75,12 +87,13 @@ validateSirenNumber sirenNumber =
                         |> List.map addDigits
                         |> List.foldl (+) 0
                         |> checkSum
-                
+
                 Nothing ->
                     BadCharacters
 
         _ ->
             BadLength
+
 
 update : Action -> Model -> Model
 update action model =
@@ -102,6 +115,7 @@ update action model =
                 | sirenNumber = "732829320"
                 , state = Valid
             }
+
 
 hint : State -> Html Action
 hint state =
@@ -151,6 +165,7 @@ view model =
             ]
         , hint model.state
         ]
+
 
 main : Program () Model Action
 main =
