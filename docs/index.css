@@ -36,7 +36,7 @@ html, body {
     padding-right: 5px;
     font-size: 0.75rem;
     transform: translateY(-50%);
-    color: grey;
+    color: #6200ee;
 }
 
 .input-field > .input {
