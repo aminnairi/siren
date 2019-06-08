@@ -51,6 +51,7 @@ html, body {
     border: none;
     outline: none;
     background-color: ghostwhite;
+    width: 100%;
 }
 
 .buttons-wrapper {
