@@ -1,4 +1,7 @@
-.PHONY: start stop restart shell reactor build format
+.PHONY: start stop restart shell reactor build format install
+
+install: start
+	docker-compose exec node npm install
 
 start:
 	docker-compose up -d node
