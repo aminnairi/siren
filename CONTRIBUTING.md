@@ -8,7 +8,6 @@ Fork the project to your own repository.
 
 ## Requirements
 
-- [GNU Make](https://www.gnu.org/software/make/)
 - [Docker](https://www.docker.com/)
 - [Docker Compose](https://docs.docker.com/compose/)
 
@@ -31,32 +30,44 @@ Where `branch-name` is the name of the branch that will fix the issue.
 ## Dependencies installation
 
 ```console
-$ make
+$ docker-compose run --rm npm install
 ```
 
-Or
+## Watch
 
 ```console
-$ make install
+$ docker-compose run --rm --service-ports npm run watch
 ```
 
-## Reactor
-
-```console
-$ make reactor
-```
-
-The application will be available through the IP address: http://127.0.0.1:8000/. Make sure the port `8000` is not already taken by another application before running this command.
+The application will be available through the IP address: http://127.0.0.1:8000/. Make sure the port `8000` is not already taken by another application before running this command. The server will be live reloaded using the port `35729`.
 
 ## Fix the issue
 
 Append changes until the issue is fixed.
 
-## Build
+## Development
 
 ```console
-$ make build
+$ docker-compose run --rm npm run development
 ```
+
+This will allow you to serve the application using your favorite HTTP server to see if everything is OK. The development build will be available in the `docs` folder.
+
+## Format
+
+```console
+$ docker-compose run --rm npm run format
+```
+
+This will format the `Main.elm` file according to the Elm style.
+
+## Production
+
+```console
+$ docker-compose run --rm npm run production
+```
+
+This will allow you to serve the application using your favorite HTTP server to see if everything is OK. The optimized build will be available in the `docs` folder.
 
 ## Commit
 
