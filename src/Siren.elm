@@ -7,7 +7,7 @@ import Html.Events
 
 
 
--- TYPES
+-- MODEL
 
 
 type State
@@ -15,17 +15,6 @@ type State
     | BadLength
     | Invalid
     | Valid
-    | BadCharacters
-
-
-type Action
-    = SirenUpdated String
-    | ResetSirenNumber
-    | SetSirenNumber
-
-
-
--- MODEL
 
 
 type alias Model =
@@ -40,17 +29,13 @@ initialModel =
 
 
 
--- HELPERS
+-- UPDATE
 
 
-characterToInteger : String -> Int
-characterToInteger character =
-    case String.toInt character of
-        Just digit ->
-            digit
-
-        Nothing ->
-            0
+type Message
+    = SirenUpdated String
+    | ResetSirenNumber
+    | SetSirenNumber
 
 
 multiplyDigitAtOddIndex : Int -> Int -> Int
@@ -71,53 +56,57 @@ addDigits digits =
         digits
 
 
-checkSum : Int -> State
-checkSum sum =
-    if modBy 10 sum == 0 then
-        Valid
+sirenNumberToState : String -> State
+sirenNumberToState sirenNumber =
+    let
+        filteredSirenNumbers : List Int
+        filteredSirenNumbers =
+            sirenNumber
+                |> String.split ""
+                |> List.filterMap String.toInt
 
-    else
-        Invalid
-
-
-splitEachCharacters : String -> List String
-splitEachCharacters string =
-    String.split "" string
-
-
-validateSirenNumber : String -> State
-validateSirenNumber sirenNumber =
-    case String.length sirenNumber of
+        filteredSirenNumbersLength : Int
+        filteredSirenNumbersLength =
+            List.length filteredSirenNumbers
+    in
+    case filteredSirenNumbersLength of
         0 ->
             Initial
 
         9 ->
-            case String.toInt sirenNumber of
-                Just _ ->
-                    List.map characterToInteger (splitEachCharacters sirenNumber)
+            let
+                isValidSirenNumber : Bool
+                isValidSirenNumber =
+                    filteredSirenNumbers
                         |> List.indexedMap multiplyDigitAtOddIndex
                         |> List.map addDigits
                         |> List.foldl (+) 0
-                        |> checkSum
+                        |> modBy 10
+                        |> (==) 0
+            in
+            if isValidSirenNumber then
+                Valid
 
-                Nothing ->
-                    BadCharacters
+            else
+                Invalid
 
         _ ->
             BadLength
 
 
-
--- UPDATE
-
-
-update : Action -> Model -> Model
-update action model =
-    case action of
+update : Message -> Model -> Model
+update message model =
+    case message of
         SirenUpdated newSirenNumber ->
+            let
+                filteredSirenNumber : String
+                filteredSirenNumber =
+                    newSirenNumber
+                        |> String.filter (Char.isAlpha >> not)
+            in
             { model
-                | sirenNumber = String.trim newSirenNumber
-                , state = newSirenNumber |> String.trim |> validateSirenNumber
+                | sirenNumber = filteredSirenNumber
+                , state = sirenNumberToState filteredSirenNumber
             }
 
         ResetSirenNumber ->
@@ -128,8 +117,8 @@ update action model =
 
         SetSirenNumber ->
             { model
-                | sirenNumber = "732829320"
-                , state = Valid
+                | sirenNumber = "732 829 320"
+                , state = sirenNumberToState "732 829 320"
             }
 
 
@@ -137,26 +126,31 @@ update action model =
 -- VIEW
 
 
-viewHint : State -> Html Action
+viewHint : State -> Html Message
 viewHint state =
     case state of
         Initial ->
-            Html.p [] [ Html.text "Le numéro SIREN - également appelé numéro unique d'identification - est un numéro à 9 chiffres qui permet d'identifier une entreprise." ]
+            Html.p
+                []
+                [ Html.a
+                    [ Html.Attributes.href "https://fr.wikipedia.org/wiki/Syst%C3%A8me_d%27identification_du_r%C3%A9pertoire_des_entreprises"
+                    , Html.Attributes.target "blank"
+                    ]
+                    [ Html.text "Le numéro SIREN" ]
+                , Html.text " - également appelé numéro unique d'identification - est un numéro à 9 chiffres qui permet d'identifier une entreprise."
+                ]
 
         BadLength ->
             Html.p [] [ Html.text "Indice : la taille d'un numéro SIREN est de 9 caractères." ]
 
         Invalid ->
-            Html.p [] [ Html.text "SIREN invalide. Merci de vérifier votre saisie." ]
+            Html.p [] [ Html.text "Le numéro SIREN tapé est invalide. Merci de vérifier votre saisie." ]
 
         Valid ->
-            Html.p [] [ Html.text "SIREN valide." ]
-
-        BadCharacters ->
-            Html.p [] [ Html.text "Indice : le numéro SIREN est composé de chiffres uniquement." ]
+            Html.p [] [ Html.text "Le numéro SIREN tapé est mathématiquement valide. Cela ne garantie pas que la société est enregistré au répertoire SIRENE de l'Insee." ]
 
 
-view : Model -> Html Action
+view : Model -> Html Message
 view model =
     Html.div
         [ Html.Attributes.class "wrapper" ]
@@ -166,7 +160,7 @@ view model =
                 [ Html.Attributes.class "input-field" ]
                 [ Html.input
                     [ Html.Attributes.autofocus True
-                    , Html.Attributes.placeholder "Exemple : 732829320"
+                    , Html.Attributes.placeholder "Ex: 732829320, 732 829 320, 732-829-320, 732.829.320, ..."
                     , Html.Events.onInput SirenUpdated
                     , Html.Attributes.value model.sirenNumber
                     , Html.Attributes.id "siren"
@@ -177,8 +171,7 @@ view model =
                     [ Html.Attributes.for "siren"
                     , Html.Attributes.class "input-label"
                     ]
-                    [ Html.text "Valider mon SIREN "
-                    ]
+                    [ Html.text "Valider mon SIREN " ]
                 ]
             , Html.div
                 [ Html.Attributes.class "buttons-wrapper" ]
@@ -211,7 +204,7 @@ view model =
 -- MAIN
 
 
-main : Program () Model Action
+main : Program () Model Message
 main =
     Browser.sandbox
         { init = initialModel
