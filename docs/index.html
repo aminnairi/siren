@@ -1,52 +1,15 @@
 <!DOCTYPE html>
-<html lang='fr-FR'>
-    <head>
-        <meta charset='utf-8'>
-        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-        <meta name='description' content='Validateur de numéro SIREN'>
-        <title>Validateur de numéro SIREN</title>
-        <link rel='preload' href='siren.js' as='script'>
-        <link rel='preload' href='index.css' as='style'>
-        <script async>
-            'use strict';
-
-            window.addEventListener('load', function() {
-                var siren = document.createElement('script');
-                var index = document.createElement('link');
-
-                siren.src = 'siren.js';
-                siren.async = true;
-
-                index.href = 'index.css';
-                index.rel = 'stylesheet';
-
-                document.head.appendChild(siren);
-                document.head.appendChild(index);
-
-                Promise.all([
-                    new Promise(function(resolve) {
-                        siren.addEventListener('load', function() {
-                            resolve();
-                        });
-                    }),
-                    new Promise(function(resolve) {
-                        index.addEventListener('load', function() {
-                            resolve();
-                        });
-                    })
-                ]).then(function() {
-                    var main = document.getElementsByTagName('main');
-
-                    if (main instanceof HTMLCollection && main[0] instanceof HTMLElement && Elm && Elm.Siren && Elm.Siren.init) {
-                        Elm.Siren.init({
-                            node: main[0]
-                        });
-                    }
-                });
-            });
-        </script>
-    </head>
-    <body>
-        <main></main>
-    </body>
+<html lang="fr-FR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Validateur de numéro SIREN">
+    <meta name="theme-color" content="#6200ee">
+    <title>Validateur de numéro SIREN</title>
+    <link rel="preload" href="siren.css" as="style">
+    <script src="siren.js" async></script>
+  </head>
+  <body>
+    <main></main>
+  </body>
 </html>
