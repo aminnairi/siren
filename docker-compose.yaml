@@ -1,13 +1,38 @@
-version: '3'
+version: "3"
 
 services:
-  node:
-    image: node
+  npm:
+    image: node:15.0.0
     user: node
     working_dir: /home/node
     tty: true
     stdin_open: true
+    entrypoint: npm
+    command: --help
     volumes:
       - .:/home/node
     ports:
       - 8000:8000
+      - 35729:35729
+
+  npx:
+    image: node:15.0.0
+    user: node
+    working_dir: /home/node
+    tty: true
+    stdin_open: true
+    entrypoint: npx
+    command: --help
+    volumes:
+      - .:/home/node
+
+  elm:
+    image: node:15.0.0
+    user: node
+    working_dir: /home/node
+    tty: true
+    stdin_open: true
+    entrypoint: npx elm
+    command: --help
+    volumes:
+      - .:/home/node
