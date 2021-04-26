@@ -1,9 +1,13 @@
 module Siren exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, input, label, p, text, a, main_, footer)
-import Html.Attributes exposing (autofocus, class, for, id, placeholder, value, href, target)
-import Html.Events exposing (onClick, onInput)
+import Html exposing (Html)
+import Html.Attributes
+import Html.Events
+
+
+
+-- TYPES
 
 
 type State
@@ -14,21 +18,29 @@ type State
     | BadCharacters
 
 
-type alias Model =
-    { sirenNumber : String
-    , state : State
-    }
-
-
 type Action
     = SirenUpdated String
     | ResetSirenNumber
     | SetSirenNumber
 
 
+
+-- MODEL
+
+
+type alias Model =
+    { sirenNumber : String
+    , state : State
+    }
+
+
 initialModel : Model
 initialModel =
     Model "" Initial
+
+
+
+-- HELPERS
 
 
 characterToInteger : String -> Int
@@ -81,7 +93,7 @@ validateSirenNumber sirenNumber =
 
         9 ->
             case String.toInt sirenNumber of
-                Just sirenNumberInteger ->
+                Just _ ->
                     List.map characterToInteger (splitEachCharacters sirenNumber)
                         |> List.indexedMap multiplyDigitAtOddIndex
                         |> List.map addDigits
@@ -95,13 +107,17 @@ validateSirenNumber sirenNumber =
             BadLength
 
 
+
+-- UPDATE
+
+
 update : Action -> Model -> Model
 update action model =
     case action of
         SirenUpdated newSirenNumber ->
             { model
                 | sirenNumber = String.trim newSirenNumber
-                , state = validateSirenNumber <| String.trim newSirenNumber
+                , state = newSirenNumber |> String.trim |> validateSirenNumber
             }
 
         ResetSirenNumber ->
@@ -117,74 +133,82 @@ update action model =
             }
 
 
-hint : State -> Html Action
-hint state =
+
+-- VIEW
+
+
+viewHint : State -> Html Action
+viewHint state =
     case state of
         Initial ->
-            p [] [ text "Le numéro SIREN - également appelé numéro unique d'identification - est un numéro à 9 chiffres qui permet d'identifier une entreprise." ]
+            Html.p [] [ Html.text "Le numéro SIREN - également appelé numéro unique d'identification - est un numéro à 9 chiffres qui permet d'identifier une entreprise." ]
 
         BadLength ->
-            p [] [ text "Indice : la taille d'un numéro SIREN est de 9 caractères." ]
+            Html.p [] [ Html.text "Indice : la taille d'un numéro SIREN est de 9 caractères." ]
 
         Invalid ->
-            p [] [ text "SIREN invalide. Merci de vérifier votre saisie." ]
+            Html.p [] [ Html.text "SIREN invalide. Merci de vérifier votre saisie." ]
 
         Valid ->
-            p [] [ text "SIREN valide." ]
+            Html.p [] [ Html.text "SIREN valide." ]
 
         BadCharacters ->
-            p [] [ text "Indice : le numéro SIREN est composé de chiffres uniquement." ]
+            Html.p [] [ Html.text "Indice : le numéro SIREN est composé de chiffres uniquement." ]
 
 
 view : Model -> Html Action
 view model =
-    div
-        [ class "wrapper" ]
-        [ main_
-            [ class "container" ]
-            [ div
-                [ class "input-field" ]
-                [ input
-                    [ autofocus True
-                    , placeholder "Exemple : 732829320"
-                    , onInput SirenUpdated
-                    , value model.sirenNumber
-                    , id "siren"
-                    , class "input"
+    Html.div
+        [ Html.Attributes.class "wrapper" ]
+        [ Html.main_
+            [ Html.Attributes.class "container" ]
+            [ Html.div
+                [ Html.Attributes.class "input-field" ]
+                [ Html.input
+                    [ Html.Attributes.autofocus True
+                    , Html.Attributes.placeholder "Exemple : 732829320"
+                    , Html.Events.onInput SirenUpdated
+                    , Html.Attributes.value model.sirenNumber
+                    , Html.Attributes.id "siren"
+                    , Html.Attributes.class "input"
                     ]
                     []
-                , label
-                    [ for "siren"
-                    , class "input-label"
+                , Html.label
+                    [ Html.Attributes.for "siren"
+                    , Html.Attributes.class "input-label"
                     ]
-                    [ text "Valider mon SIREN "
+                    [ Html.text "Valider mon SIREN "
                     ]
                 ]
-            , div
-                [ class "buttons-wrapper" ]
-                [ button
-                    [ onClick ResetSirenNumber
-                    , class "button"
+            , Html.div
+                [ Html.Attributes.class "buttons-wrapper" ]
+                [ Html.button
+                    [ Html.Events.onClick ResetSirenNumber
+                    , Html.Attributes.class "button"
                     ]
-                    [ text "réinitialiser" ]
-                , button
-                    [ class "button"
-                    , onClick SetSirenNumber
+                    [ Html.text "réinitialiser" ]
+                , Html.button
+                    [ Html.Attributes.class "button"
+                    , Html.Events.onClick SetSirenNumber
                     ]
-                    [ text "exemple" ]
+                    [ Html.text "exemple" ]
                 ]
-            , hint model.state
+            , viewHint model.state
             ]
-        , footer
+        , Html.footer
             []
-            [ a
-                [ class "button"
-                , target "blank"
-                , href "https://github.com/aminnairi/siren/"
+            [ Html.a
+                [ Html.Attributes.class "button"
+                , Html.Attributes.target "blank"
+                , Html.Attributes.href "https://github.com/aminnairi/siren/"
                 ]
-                [ text "github" ]
+                [ Html.text "github" ]
             ]
         ]
+
+
+
+-- MAIN
 
 
 main : Program () Model Action
